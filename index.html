@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schwangerschafts-Tracker</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for dark mode and better visual appeal */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text */
+        }
+        .container {
+            max-width: 90%; /* Responsive width */
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #2d3748; /* Slightly lighter dark for container */
+            border-radius: 1rem; /* More rounded corners */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Softer shadow for dark mode */
+        }
+        h1, h2 {
+            color: #9f7aea; /* Purple tone for headings */
+        }
+        .info-box {
+            background-color: #2a4365; /* Darker blue for info box */
+            border-left: 4px solid #63b3ed; /* Lighter blue border */
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: #bee3f8; /* Lighter blue text */
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Responsive grid columns */
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        .week-cell {
+            background-color: #4a5568; /* Dark gray for cells */
+            border: 1px solid #667eea; /* Slightly purple-blue border */
+            border-radius: 0.5rem;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #e2e8f0; /* Light text */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80px; /* Ensure cells have a minimum height */
+        }
+        .week-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #cbd5e1; /* Lighter text for week number */
+            margin-bottom: 0.25rem;
+        }
+        /* Enhanced current week styling */
+        .current-week {
+            background-color: #7c3aed; /* Brighter, more distinct purple */
+            color: #ffffff;
+            border: 2px solid #a78bfa; /* Thicker, lighter purple border */
+            box-shadow: 0 6px 12px rgba(124, 58, 237, 0.5); /* More pronounced shadow */
+            transform: scale(1.08); /* Slightly more enlarged */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative; /* Needed for pseudo-elements if added later */
+            z-index: 1; /* Ensure it's above other cells if scaling causes overlap */
+        }
+        .trimester-1 {
+            background-color: #975a16; /* Darker orange/yellow for Trimester 1 */
+            border-color: #d69e2e;
+        }
+        .trimester-2 {
+            background-color: #2f855a; /* Darker green for Trimester 2 */
+            border-color: #48bb78;
+        }
+        .trimester-3 {
+            background-color: #c53030; /* Darker red for Trimester 3 */
+            border-color: #e53e3e;
+        }
+        .trimester-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            color: #a0aec0; /* Default text color for labels */
+        }
+        .current-week .trimester-label {
+            color: #ffffff; /* White text for current week's trimester label */
+        }
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 640px) {
+            .container {
+                margin: 1rem auto;
+                padding: 1rem;
+            }
+            .calendar-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                gap: 0.4rem;
+            }
+            .week-cell {
+                min-height: 60px;
+                padding: 0.5rem 0.3rem;
+                font-size: 0.8rem;
+            }
+            .week-number {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center mb-6">Schwangerschafts-Tracker</h1>
+
+        <div id="infoDisplay" class="info-box mb-8">
+            <p>Erster Tag der letzten normalen Regel (LMP): <span id="lmpDisplay" class="font-bold"></span></p>
+            <p>Aktuelle Schwangerschaftswoche: <span id="currentSsw" class="font-bold"></span></p>
+            <p>Errechneter Entbindungstermin: <span id="dueDate" class="font-bold"></span></p>
+        </div>
+
+        <h2 class="text-2xl font-semibold text-center mb-4">Kalender der Schwangerschaft</h2>
+        <div id="calendar" class="calendar-grid">
+            <!-- Calendar weeks will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const infoDisplay = document.getElementById('infoDisplay');
+        const lmpDisplay = document.getElementById('lmpDisplay');
+        const currentSswSpan = document.getElementById('currentSsw');
+        const dueDateSpan = document.getElementById('dueDate');
+        const calendarDiv = document.getElementById('calendar');
+
+        // Fixed LMP Date: April 10, 2025
+        const fixedLmpDate = new Date('2025-04-10T00:00:00'); // Use T00:00:00 to avoid timezone issues
+
+        // Function to calculate the difference in days between two dates
+        function getDaysBetween(date1, date2) {
+            const diffTime = Math.abs(date2.getTime() - date1.getTime());
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // Function to calculate SSW (Schwangerschaftswoche)
+        function calculateSsw(lmpDate, currentDate) {
+            const daysSinceLmp = getDaysBetween(lmpDate, currentDate);
+            const weeks = Math.floor(daysSinceLmp / 7);
+            const days = daysSinceLmp % 7;
+            return { weeks, days, totalDays: daysSinceLmp };
+        }
+
+        // Function to calculate the estimated due date (LMP + 280 days)
+        function calculateDueDate(lmpDate) {
+            const dueDate = new Date(lmpDate);
+            dueDate.setDate(dueDate.getDate() + 280); // 40 weeks * 7 days/week = 280 days
+            return dueDate;
+        }
+
+        // Function to get trimester label based on week number
+        function getTrimesterLabel(week) {
+            if (week >= 1 && week <= 13) {
+                return '1. Trimester';
+            } else if (week >= 14 && week <= 27) {
+                return '2. Trimester';
+            } else if (week >= 28 && week <= 40) {
+                return '3. Trimester';
+            }
+            return '';
+        }
+
+        // Function to get trimester CSS class
+        function getTrimesterClass(week) {
+            if (week >= 1 && week <= 13) {
+                return 'trimester-1';
+            } else if (week >= 14 && week <= 27) {
+                return 'trimester-2';
+            } else if (week >= 28 && week <= 40) {
+                return 'trimester-3';
+            }
+            return '';
+        }
+
+        // Function to render the app
+        function renderApp() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Normalize today's date to start of day
+
+            // Display fixed LMP date
+            lmpDisplay.textContent = fixedLmpDate.toLocaleDateString('de-DE', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Calculate and display current SSW and Due Date
+            const { weeks: currentWeeks, days: currentDays } = calculateSsw(fixedLmpDate, today);
+            const dueDate = calculateDueDate(fixedLmpDate);
+
+            currentSswSpan.textContent = `${currentWeeks}+${currentDays} SSW`;
+            dueDateSpan.textContent = dueDate.toLocaleDateString('de-DE', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Render Calendar
+            calendarDiv.innerHTML = ''; // Clear previous calendar
+            const totalWeeksToDisplay = 41; // Display up to week 40, plus one for buffer/due date visualization
+
+            for (let i = 0; i < totalWeeksToDisplay; i++) {
+                const weekNumber = i + 1;
+                const weekCell = document.createElement('div');
+                weekCell.classList.add('week-cell');
+
+                // Add trimester class
+                weekCell.classList.add(getTrimesterClass(weekNumber));
+
+                // Check if this is the current week
+                if (weekNumber === currentWeeks + 1) { // +1 because currentWeeks is 0-indexed for full weeks passed
+                    weekCell.classList.add('current-week');
+                }
+
+                const weekNumberSpan = document.createElement('span');
+                weekNumberSpan.classList.add('week-number');
+                weekNumberSpan.textContent = `Woche ${weekNumber}`;
+                weekCell.appendChild(weekNumberSpan);
+
+                const trimesterLabel = document.createElement('span');
+                trimesterLabel.classList.add('trimester-label');
+                trimesterLabel.textContent = getTrimesterLabel(weekNumber);
+                weekCell.appendChild(trimesterLabel);
+
+                calendarDiv.appendChild(weekCell);
+            }
+        }
+
+        // Render the app on page load
+        document.addEventListener('DOMContentLoaded', renderApp);
+    </script>
+</body>
+</html>
+
