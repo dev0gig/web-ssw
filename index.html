@@ -14,21 +14,39 @@
         /* Using a more modern, clean font */
         body {
             font-family: 'Inter', sans-serif;
+            /* Add a background that makes the blur effect visible */
+            background-image: radial-gradient(circle at top right, rgb(127 29 29 / 0.2), transparent),
+                              radial-gradient(circle at bottom left, rgb(29 78 216 / 0.2), transparent);
+            background-attachment: fixed; /* Keep the gradient fixed during scroll */
+        }
+        /* Glassmorphism Effect */
+        .glass-effect {
+            background: rgba(40, 48, 66, 0.5); /* A semi-transparent slate-like color */
+            -webkit-backdrop-filter: blur(10px); /* For Safari */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
         .week-cell {
+            background: rgba(255, 255, 255, 0.05);
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             transition: box-shadow 0.2s ease-in-out, background-color 0.2s;
         }
         .week-cell:hover {
-            background-color: rgb(255 255 255 / 0.05); /* Subtle hover effect */
+            background-color: rgba(255, 255, 255, 0.1); /* Brighter hover */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
         .selected-week {
-            background-color: #14b8a6; /* Teal-500 */
+            background-color: rgba(20, 184, 166, 0.6); /* Teal-500 with opacity */
             color: #ffffff;
             border-color: #2dd4bf; /* Teal-400 */
+            box-shadow: 0 0 15px rgba(20, 184, 166, 0.4);
         }
         /* Enhanced current week styling */
         .current-week {
-            background-color: #a855f7; /* Vibrant Purple */
+            background-color: rgba(168, 85, 247, 0.6); /* Vibrant Purple with opacity */
             color: #ffffff;
             border-color: #c084fc;
             box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
@@ -47,6 +65,7 @@
         }
         .date-input {
             color-scheme: dark; /* Helps with date picker styling in dark mode */
+            background-color: rgba(51, 65, 85, 0.5); /* slate-700 with opacity */
         }
         #progressBar {
             transition: width 0.5s ease-in-out;
@@ -58,7 +77,7 @@
         <h1 class="text-3xl sm:text-4xl font-bold text-center text-violet-400">Schwangerschafts-Tracker</h1>
 
         <!-- Main Info Card -->
-        <div id="infoDisplay" class="bg-slate-800/50 border-l-4 border-sky-500 p-4 sm:p-6 rounded-xl shadow-lg space-y-2">
+        <div id="infoDisplay" class="glass-effect border-l-4 border-sky-500 p-4 sm:p-6 rounded-xl space-y-2">
             <p><span class="font-medium text-slate-400">Erster Tag der letzten Regel:</span> <span id="lmpDisplay" class="font-bold text-slate-100"></span></p>
             <p><span class="font-medium text-slate-400">Aktuelle Schwangerschaftswoche:</span> <span id="currentSsw" class="font-bold text-slate-100"></span></p>
             <p><span class="font-medium text-slate-400">Errechneter Entbindungstermin:</span> <span id="dueDate" class="font-bold text-slate-100"></span></p>
@@ -71,7 +90,7 @@
                 <span class="font-semibold text-slate-400">Fortschritt</span>
                 <span id="progressPercentage" class="font-bold text-violet-400">0%</span>
             </div>
-            <div class="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
+            <div class="w-full bg-slate-700/50 rounded-full h-3 overflow-hidden">
                 <div id="progressBar" class="bg-violet-500 h-3 rounded-full"></div>
             </div>
             <div class="flex justify-between text-xs mt-1 text-slate-500">
@@ -81,7 +100,7 @@
         </div>
 
         <!-- Weekly Info Card -->
-        <div id="weeklyInfoContainer" class="bg-slate-800/50 border-l-4 border-amber-500 p-4 sm:p-6 rounded-xl shadow-lg" style="display: none;">
+        <div id="weeklyInfoContainer" class="glass-effect border-l-4 border-amber-500 p-4 sm:p-6 rounded-xl" style="display: none;">
             <h3 class="text-xl font-semibold mb-3 text-amber-400">Was passiert in dieser Woche? (<span id="weeklyInfoWeekNumber"></span>)</h3>
             <p id="weeklyInfoText" class="text-base leading-relaxed text-slate-300">Informationen zur aktuellen Woche werden hier geladen...</p>
             <div id="weeklyStats" style="display: none;" class="mt-4 pt-4 border-t border-amber-500/20 flex flex-col sm:flex-row sm:justify-around text-center gap-4">
@@ -90,11 +109,11 @@
         </div>
 
         <!-- Date Converter Card -->
-        <div class="bg-slate-800 p-4 sm:p-6 rounded-xl shadow-lg">
+        <div class="glass-effect p-4 sm:p-6 rounded-xl">
             <h2 class="text-2xl font-semibold text-center mb-4 text-violet-400">Datum in SSW umrechnen</h2>
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <label for="date-search-input" class="font-semibold text-slate-400">Wähle ein Datum:</label>
-                <input type="date" id="date-search-input" class="date-input bg-slate-700 border border-slate-600 rounded-md p-2 text-slate-200">
+                <input type="date" id="date-search-input" class="date-input border border-slate-600 rounded-md p-2 text-slate-200">
             </div>
             <div id="date-search-result" class="text-center mt-4 text-slate-400 min-h-[2rem]">
                 <p>Wähle ein Datum, um die entsprechende SSW zu sehen.</p>
@@ -104,7 +123,7 @@
         <!-- Calendar Section -->
         <div class="space-y-4">
             <h2 class="text-2xl font-semibold text-center text-violet-400">Kalender der Schwangerschaft</h2>
-            <div id="weekInfoDisplay" class="bg-slate-800/50 text-center p-4 rounded-xl min-h-[3.5rem] flex items-center justify-center">
+            <div id="weekInfoDisplay" class="glass-effect text-center p-4 rounded-xl min-h-[3.5rem] flex items-center justify-center">
                 <p class="text-slate-400">Klicke auf eine Woche, um die genauen Daten anzuzeigen.</p>
             </div>
             <div id="calendar" class="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-10 gap-2">
@@ -324,8 +343,8 @@
             for (let i = 0; i < totalWeeksToDisplay; i++) {
                 const weekNumber = i + 1;
                 const weekCell = document.createElement('div');
-                weekCell.dataset.week = weekNumber; 
-                weekCell.className = 'week-cell flex flex-col items-center justify-center p-2 rounded-lg border cursor-pointer min-h-[80px] text-center';
+                weekCell.dataset.week = weekNumber;
+                weekCell.className = 'week-cell flex flex-col items-center justify-center p-2 rounded-lg cursor-pointer min-h-[80px] text-center';
 
                 // Add trimester class
                 weekCell.classList.add(getTrimesterClass(weekNumber));
