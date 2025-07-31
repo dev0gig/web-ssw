@@ -14,74 +14,84 @@
             color: #e2e8f0; /* Light text */
         }
         .container {
-            max-width: 90%; /* Responsive width */
-            margin: 2rem auto;
-            padding: 1.5rem;
+            max-width: 90%;
+            margin: 1rem auto; /* Mobile first margin */
+            padding: 1rem; /* Mobile first padding */
             background-color: #2d3748; /* Slightly lighter dark for container */
             border-radius: 1rem; /* More rounded corners */
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Softer shadow for dark mode */
         }
         h1, h2 {
-            color: #9f7aea; /* Purple tone for headings */
+            color: #c4b5fd; /* Soft, gentle lavender for headings */
         }
         .info-box {
-            background-color: #2a4365; /* Darker blue for info box */
-            border-left: 4px solid #63b3ed; /* Lighter blue border */
+            background-color: #2a4365; /* Dark, muted blue */
+            border-left: 4px solid #90cdf4; /* Soft, light blue border */
             padding: 1rem 1.5rem;
             border-radius: 0.75rem;
-            margin-top: 1.5rem;
             font-size: 1.1rem;
-            color: #bee3f8; /* Lighter blue text */
+            color: #bee3f8; /* Light blue text */
         }
+        /* Mobile First: Base styles are for small screens */
         .calendar-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Responsive grid columns */
-            gap: 0.5rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); /* Mobile columns */
+            gap: 0.4rem; /* Mobile gap */
         }
         .week-cell {
             background-color: #4a5568; /* Dark gray for cells */
-            border: 1px solid #667eea; /* Slightly purple-blue border */
+            border: 1px solid #6366f1; /* Soft indigo border */
             border-radius: 0.5rem;
-            padding: 0.75rem 0.5rem;
+            padding: 0.5rem 0.3rem; /* Mobile padding */
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.8rem; /* Mobile font size */
             font-weight: 500;
             color: #e2e8f0; /* Light text */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 80px; /* Ensure cells have a minimum height */
+            min-height: 60px; /* Mobile height */
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .week-cell:hover {
+            transform: scale(1.05);
+            z-index: 2;
         }
         .week-number {
-            font-size: 1.2rem;
+            font-size: 1rem; /* Mobile font size */
             font-weight: 700;
             color: #cbd5e1; /* Lighter text for week number */
             margin-bottom: 0.25rem;
         }
+        .selected-week {
+            background-color: #3b82f6; /* A distinct but soft blue */
+            border-color: #93c5fd;
+            box-shadow: 0 4px 8px rgba(93, 197, 253, 0.4);
+            transform: scale(1.08);
+            z-index: 1;
+        }
         /* Enhanced current week styling */
         .current-week {
-            background-color: #7c3aed; /* Brighter, more distinct purple */
+            background-color: #9333ea; /* Strong, vibrant purple */
             color: #ffffff;
-            border: 2px solid #a78bfa; /* Thicker, lighter purple border */
-            box-shadow: 0 6px 12px rgba(124, 58, 237, 0.5); /* More pronounced shadow */
-            transform: scale(1.08); /* Slightly more enlarged */
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border: 2px solid #c084fc; /* Bright lavender border */
+            box-shadow: 0 5px 10px rgba(147, 51, 234, 0.4); /* Adjusted shadow */
             position: relative; /* Needed for pseudo-elements if added later */
             z-index: 1; /* Ensure it's above other cells if scaling causes overlap */
         }
         .trimester-1 {
-            background-color: #975a16; /* Darker orange/yellow for Trimester 1 */
-            border-color: #d69e2e;
+            background-color: #423d1d; /* Dark, muted yellow */
+            border-color: #fbbF24;
         }
         .trimester-2 {
-            background-color: #2f855a; /* Darker green for Trimester 2 */
-            border-color: #48bb78;
+            background-color: #2c4838; /* Dark, muted green */
+            border-color: #86efac;
         }
         .trimester-3 {
-            background-color: #c53030; /* Darker red for Trimester 3 */
-            border-color: #e53e3e;
+            background-color: #502c38; /* Dark, muted pink */
+            border-color: #f9a8d4;
         }
         .trimester-label {
             font-size: 0.75rem;
@@ -92,23 +102,88 @@
         .current-week .trimester-label {
             color: #ffffff; /* White text for current week's trimester label */
         }
-        /* Responsive adjustments for smaller screens */
-        @media (max-width: 640px) {
+        .weekly-info-box {
+            background-color: #4d331f; /* Dark, muted orange/brown */
+            border-left: 4px solid #fdbf8a; /* Soft orange accent */
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            color: #fed7aa; /* Soft orange text */
+            display: none; /* Hidden by default, shown via JS */
+        }
+        .weekly-info-box h3 {
+            color: #fb923c; /* Brighter, but soft orange for sub-heading */
+        }
+        .date-search-container {
+            padding: 1.5rem;
+            background-color: #2d3748;
+            border-radius: 0.75rem;
+            border: 1px solid #4a5568; /* Subtle border */
+        }
+        .date-input-wrapper {
+            display: flex;
+            flex-direction: column; /* Mobile first */
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        .date-input {
+            background-color: #4a5568;
+            border: 1px solid #6366f1;
+            color: #e2e8f0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-family: inherit;
+            color-scheme: dark; /* Helps with date picker styling in dark mode */
+        }
+        .date-search-result {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            min-height: 30px; /* Prevent layout shift */
+            padding: 0 0.5rem;
+        }
+
+        .week-info-display {
+            padding: 1rem 1.5rem;
+            background-color: #2d3748;
+            border-radius: 0.75rem;
+            border: 1px solid #4a5568;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            min-height: 50px; /* To prevent layout shift */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Stack items vertically on mobile */
+            gap: 0.25rem;
+        }
+        /* Responsive adjustments for larger screens (min-width: 640px) */
+        @media (min-width: 640px) {
             .container {
-                margin: 1rem auto;
-                padding: 1rem;
+                margin: 2rem auto;
+                padding: 1.5rem;
             }
             .calendar-grid {
-                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-                gap: 0.4rem;
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 0.5rem;
             }
             .week-cell {
-                min-height: 60px;
-                padding: 0.5rem 0.3rem;
-                font-size: 0.8rem;
+                min-height: 80px;
+                padding: 0.75rem 0.5rem;
+                font-size: 0.9rem;
             }
             .week-number {
-                font-size: 1rem;
+                font-size: 1.2rem;
+            }
+            .week-info-display {
+                flex-direction: row; /* Side-by-side on larger screens */
+                gap: 0.5rem;
+            }
+            .date-input-wrapper {
+                flex-direction: row;
+                gap: 1rem;
             }
         }
     </style>
@@ -117,13 +192,50 @@
     <div class="container">
         <h1 class="text-3xl font-bold text-center mb-6">Schwangerschafts-Tracker</h1>
 
-        <div id="infoDisplay" class="info-box mb-8">
+        <div id="infoDisplay" class="info-box">
             <p>Erster Tag der letzten normalen Regel (LMP): <span id="lmpDisplay" class="font-bold"></span></p>
             <p>Aktuelle Schwangerschaftswoche: <span id="currentSsw" class="font-bold"></span></p>
             <p>Errechneter Entbindungstermin: <span id="dueDate" class="font-bold"></span></p>
+            <p class="mt-2 pt-2 border-t border-blue-300 border-opacity-50">Noch: <span id="countdown" class="font-bold"></span></p>
         </div>
 
-        <h2 class="text-2xl font-semibold text-center mb-4">Kalender der Schwangerschaft</h2>
+        <div class="mt-8">
+            <div class="flex justify-between items-center mb-1 text-sm">
+                <span class="font-semibold text-gray-300">Fortschritt</span>
+                <span id="progressPercentage" class="font-bold" style="color: #c4b5fd;">0%</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden shadow-inner">
+                <div id="progressBar" class="h-4 rounded-full" style="background-color: #c4b5fd; width: 0%; transition: width 0.5s ease-in-out;"></div>
+            </div>
+            <div class="flex justify-between text-xs mt-1 text-gray-400">
+                <span>Woche 1</span>
+                <span>Woche 40</span>
+            </div>
+        </div>
+
+        <div id="weeklyInfoContainer" class="weekly-info-box mt-8">
+            <h3 class="text-xl font-semibold mb-3">Was passiert in dieser Woche? (<span id="weeklyInfoWeekNumber"></span>)</h3>
+            <p id="weeklyInfoText" class="text-base leading-relaxed">Informationen zur aktuellen Woche werden hier geladen...</p>
+            <div id="weeklyStats" style="display: none;" class="mt-4 pt-4 border-t border-gray-600 flex flex-col sm:flex-row sm:justify-around text-center gap-2">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <div class="date-search-container mt-8">
+            <h2 class="text-2xl font-semibold text-center mb-4">Datum in SSW umrechnen</h2>
+            <div class="date-input-wrapper">
+                <label for="date-search-input" class="font-semibold">Wähle ein Datum:</label>
+                <input type="date" id="date-search-input" class="date-input">
+            </div>
+            <div id="date-search-result" class="date-search-result">
+                <p>Wähle ein Datum, um die entsprechende SSW zu sehen.</p>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-semibold text-center mt-8 mb-4">Kalender der Schwangerschaft</h2>
+        <div id="weekInfoDisplay" class="week-info-display mb-4">
+            <p>Klicke auf eine Woche, um die genauen Daten anzuzeigen.</p>
+        </div>
         <div id="calendar" class="calendar-grid">
             <!-- Calendar weeks will be dynamically inserted here -->
         </div>
@@ -135,19 +247,76 @@
         const currentSswSpan = document.getElementById('currentSsw');
         const dueDateSpan = document.getElementById('dueDate');
         const calendarDiv = document.getElementById('calendar');
+        const weekInfoDisplay = document.getElementById('weekInfoDisplay');
+        const dateSearchInput = document.getElementById('date-search-input');
+        const dateSearchResult = document.getElementById('date-search-result');
+        const weeklyInfoContainer = document.getElementById('weeklyInfoContainer');
+        const weeklyInfoWeekNumber = document.getElementById('weeklyInfoWeekNumber');
+        const weeklyInfoText = document.getElementById('weeklyInfoText');
+        const weeklyStats = document.getElementById('weeklyStats');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercentage = document.getElementById('progressPercentage');
+        const countdownSpan = document.getElementById('countdown');
 
         // Fixed LMP Date: April 10, 2025
         const fixedLmpDate = new Date('2025-04-10T00:00:00'); // Use T00:00:00 to avoid timezone issues
 
-        // Function to calculate the difference in days between two dates
-        function getDaysBetween(date1, date2) {
-            const diffTime = Math.abs(date2.getTime() - date1.getTime());
-            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        }
+        // Data for weekly development
+        const weeklyDevelopmentInfo = {
+            1: { description: "Die Befruchtung hat noch nicht stattgefunden. Diese Woche wird zur Berechnung des Geburtstermins gezählt, beginnend mit dem ersten Tag Ihrer letzten Periode." },
+            2: { description: "Gegen Ende dieser Woche findet wahrscheinlich der Eisprung statt. Wenn eine Samenzelle auf die Eizelle trifft, beginnt die Reise des neuen Lebens." },
+            3: { description: "Die befruchtete Eizelle wandert durch den Eileiter und teilt sich kontinuierlich. Am Ende der Woche nistet sie sich in der Gebärmutterwand ein." },
+            4: { description: "Der Embryo ist winzig, aber die Schwangerschaftshormone sind nun im Urin nachweisbar. Ein Test wäre jetzt positiv. Die grundlegenden Strukturen wie das Neuralrohr bilden sich.", size: "Mohnsamengröße", weight: "kaum messbar" },
+            5: { description: "Das Herz Ihres Babys beginnt zu schlagen und Blut zu pumpen. Es ist etwa so groß wie ein Sesamsamen und die Hauptorgane beginnen sich zu entwickeln.", size: "1-2 mm", weight: "kaum messbar" },
+            6: { description: "Das Baby ist jetzt so groß wie eine Linse. Arm- und Beinknospen sind sichtbar und Gesichtszüge wie Augen und Nasenlöcher beginnen sich zu formen.", size: "4 mm", weight: "< 1 g" },
+            7: { description: "Die Größe entspricht nun einer Heidelbeere. Hände und Füße entwickeln sich, sehen aber noch wie kleine Paddel aus. Das Gehirn wächst rasant.", size: "8 mm", weight: "< 1 g" },
+            8: { description: "Alle wichtigen Organe sind angelegt und beginnen zu arbeiten. Der Embryo bewegt sich, auch wenn Sie es noch nicht spüren können. Er wird nun offiziell als Fötus bezeichnet.", size: "1,6 cm", weight: "1 g" },
+            9: { description: "Der Fötus ist so groß wie eine Weintraube. Die Gelenke (Ellbogen, Knie) sind ausgebildet und die Finger und Zehen werden länger.", size: "2,3 cm", weight: "2 g" },
+            10: { description: "Die kritischste Phase der Entwicklung ist abgeschlossen. Der Fötus kann seine Gliedmaßen beugen und die Fingernägel beginnen zu wachsen.", size: "3,1 cm", weight: "4 g" },
+            11: { description: "Das Baby ist jetzt etwa so groß wie eine Feige. Es kann gähnen, schlucken und sich strecken. Die Geschlechtsorgane entwickeln sich.", size: "4,1 cm", weight: "7 g" },
+            12: { description: "Die meisten Organe sind vollständig ausgebildet und müssen nur noch wachsen. Das Risiko einer Fehlgeburt sinkt erheblich. Das Baby ist ca. 5-6 cm groß.", size: "5,4 cm", weight: "14 g" },
+            13: { description: "Das erste Trimester endet. Der Fötus hat nun Fingerabdrücke. Die Stimmbänder beginnen sich zu entwickeln.", size: "7,4 cm", weight: "23 g" },
+            14: { description: "Willkommen im zweiten Trimester! Das Baby kann nun Grimassen schneiden und die Nieren produzieren Urin. Es ist ca. 9 cm groß.", size: "8,7 cm", weight: "43 g" },
+            15: { description: "Die Knochen werden härter und das Baby kann Licht durch die geschlossenen Augenlider wahrnehmen. Es ist jetzt so groß wie ein Apfel.", size: "10,1 cm", weight: "70 g" },
+            16: { description: "Sie könnten die ersten zarten Kindsbewegungen spüren (Flattern). Das Nervensystem ist weiter ausgereift.", size: "11,6 cm", weight: "100 g" },
+            17: { description: "Das Skelett wandelt sich von Knorpel zu Knochen. Der Fötus legt an Gewicht zu und bildet eine schützende Fettschicht.", size: "13 cm", weight: "140 g" },
+            18: { description: "Die Ohren sind an der richtigen Position und das Baby kann wahrscheinlich hören. Sprechen oder singen Sie ihm etwas vor!", size: "14,2 cm", weight: "190 g" },
+            19: { description: "Eine schützende, wachsartige Schicht namens Vernix caseosa bildet sich auf der Haut des Babys. Es ist jetzt ca. 15 cm lang.", size: "15,3 cm", weight: "240 g" },
+            20: { description: "Halbzeit! Der große Ultraschall steht oft an, bei dem Sie vielleicht das Geschlecht erfahren können. Das Baby schluckt regelmäßig Fruchtwasser.", size: "25,6 cm", weight: "300 g" },
+            21: { description: "Die Bewegungen werden kräftiger. Das Baby entwickelt einen regelmäßigen Schlaf-Wach-Rhythmus.", size: "26,7 cm", weight: "360 g" },
+            22: { description: "Das Baby sieht nun wie eine Miniatur-Version eines Neugeborenen aus. Lippen, Augenbrauen und Augenlider sind deutlich erkennbar.", size: "27,8 cm", weight: "430 g" },
+            23: { description: "Die Lungen entwickeln sich weiter und produzieren Surfactant, eine Substanz, die beim Atmen nach der Geburt hilft. Das Hörvermögen ist gut entwickelt.", size: "29 cm", weight: "500 g" },
+            24: { description: "Die Überlebenschancen bei einer Frühgeburt steigen ab dieser Woche deutlich an. Das Baby wiegt etwa 600 Gramm.", size: "30 cm", weight: "600 g" },
+            25: { description: "Das Baby reagiert auf bekannte Stimmen und Geräusche. Die Haut wird weniger durchsichtig und füllt sich mit Fett.", size: "34,6 cm", weight: "660 g" },
+            26: { description: "Die Augen öffnen sich! Das Baby kann nun zwischen hell und dunkel unterscheiden.", size: "35,6 cm", weight: "760 g" },
+            27: { description: "Das zweite Trimester neigt sich dem Ende zu. Das Gehirn ist sehr aktiv und das Baby übt Atembewegungen.", size: "36,6 cm", weight: "875 g" },
+            28: { description: "Willkommen im dritten Trimester! Das Baby hat gute Überlebenschancen, sollte es jetzt geboren werden. Es wiegt nun etwa 1 kg.", size: "37,6 cm", weight: "1 kg" },
+            29: { description: "Die Knochen sind fast vollständig entwickelt. Das Baby nimmt schnell an Gewicht zu und benötigt viel Kalzium.", size: "38,6 cm", weight: "1,2 kg" },
+            30: { description: "Das Baby kann seinen Kopf von einer Seite zur anderen drehen. Das Lanugo-Haar, das seinen Körper bedeckt hat, beginnt zu verschwinden.", size: "39,9 cm", weight: "1,3 kg" },
+            31: { description: "Die zentralen Nervensystemverbindungen reifen weiter, was dem Baby ermöglicht, die Körpertemperatur zu regulieren.", size: "41,1 cm", weight: "1,5 kg" },
+            32: { description: "Die Zehen- und Fingernägel sind vollständig ausgebildet. Das Baby übt das Atmen, indem es Fruchtwasser ein- und ausatmet.", size: "42,4 cm", weight: "1,7 kg" },
+            33: { description: "Die Pupillen des Babys können sich bei Lichteinfall verengen und erweitern. Die Knochen härten weiter aus, der Schädel bleibt jedoch weich und flexibel für die Geburt.", size: "43,7 cm", weight: "1,9 kg" },
+            34: { description: "Die Lungen sind fast vollständig entwickelt. Wenn das Baby jetzt geboren würde, hätte es wahrscheinlich nur geringe Atemprobleme.", size: "45 cm", weight: "2,1 kg" },
+            35: { description: "Das Baby nimmt pro Woche etwa 200-250 Gramm zu. Es wird enger in der Gebärmutter, die Bewegungen fühlen sich anders an.", size: "46,2 cm", weight: "2,4 kg" },
+            36: { description: "Das Baby sinkt tiefer ins Becken ('Senkwehen'). Dies kann das Atmen für die Mutter erleichtern.", size: "47,4 cm", weight: "2,6 kg" },
+            37: { description: "Die Schwangerschaft gilt nun als 'termingerecht'. Das Baby ist bereit für die Geburt.", size: "48,6 cm", weight: "2,9 kg" },
+            38: { description: "Das Baby hat einen festen Griff. Das Gehirn wiegt jetzt etwa 400 Gramm und entwickelt sich auch nach der Geburt weiter.", size: "49,8 cm", weight: "3,1 kg" },
+            39: { description: "Die schützende Vernix-Schicht und das Lanugo-Haar sind größtenteils verschwunden. Das Baby legt weiterhin Fettreserven an.", size: "50,7 cm", weight: "3,3 kg" },
+            40: { description: "Der errechnete Termin ist da! Aber keine Sorge, nur wenige Babys kommen genau an diesem Tag. Die Geburt kann jederzeit beginnen.", size: "51,2 cm", weight: "3,5 kg" }
+        };
 
         // Function to calculate SSW (Schwangerschaftswoche)
         function calculateSsw(lmpDate, currentDate) {
-            const daysSinceLmp = getDaysBetween(lmpDate, currentDate);
+            // Calculate the difference in milliseconds. Can be negative.
+            const diffTime = currentDate.getTime() - lmpDate.getTime();
+            // Convert to days. Math.floor handles rounding correctly for both positive and negative diffs.
+            const daysSinceLmp = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            if (daysSinceLmp < 0) {
+                // Return a clear indicator that the date is before the LMP
+                return { weeks: -1, days: -1, totalDays: daysSinceLmp };
+            }
+
             const weeks = Math.floor(daysSinceLmp / 7);
             const days = daysSinceLmp % 7;
             return { weeks, days, totalDays: daysSinceLmp };
@@ -158,6 +327,17 @@
             const dueDate = new Date(lmpDate);
             dueDate.setDate(dueDate.getDate() + 280); // 40 weeks * 7 days/week = 280 days
             return dueDate;
+        }
+
+        // Function to get the date range for a specific week
+        function getWeekDateRange(weekNumber, lmpDate) {
+            const startDate = new Date(lmpDate);
+            // Week 1 starts on day 0 from LMP. Week `n` starts on day `(n-1) * 7`.
+            startDate.setDate(startDate.getDate() + (weekNumber - 1) * 7);
+
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 6);
+            return { startDate, endDate };
         }
 
         // Function to get trimester label based on week number
@@ -197,7 +377,7 @@
             });
 
             // Calculate and display current SSW and Due Date
-            const { weeks: currentWeeks, days: currentDays } = calculateSsw(fixedLmpDate, today);
+            const { weeks: currentWeeks, days: currentDays, totalDays: currentTotalDays } = calculateSsw(fixedLmpDate, today);
             const dueDate = calculateDueDate(fixedLmpDate);
 
             currentSswSpan.textContent = `${currentWeeks}+${currentDays} SSW`;
@@ -207,6 +387,64 @@
                 day: 'numeric'
             });
 
+            // Calculate and display countdown
+            const remainingTime = dueDate.getTime() - today.getTime();
+            // Use Math.ceil to count the current day as a full day remaining
+            const remainingTotalDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
+
+            if (remainingTotalDays > 0) {
+                const remainingWeeks = Math.floor(remainingTotalDays / 7);
+                const remainingDaysInWeek = remainingTotalDays % 7;
+                countdownSpan.textContent = `${remainingWeeks} Wochen & ${remainingDaysInWeek} Tage (${remainingTotalDays} Tage gesamt)`;
+            } else if (remainingTotalDays === 0) {
+                countdownSpan.textContent = "Heute ist der errechnete Termin!";
+            } else {
+                const daysOverdue = Math.abs(remainingTotalDays);
+                const dayText = daysOverdue === 1 ? 'Tag' : 'Tage';
+                countdownSpan.textContent = `Termin um ${daysOverdue} ${dayText} überschritten`;
+            }
+
+            // Calculate and display progress bar
+            const totalPregnancyDays = 280;
+            let progressPercent = (currentTotalDays / totalPregnancyDays) * 100;
+            // Clamp the value between 0 and 100
+            progressPercent = Math.max(0, Math.min(100, progressPercent));
+
+            progressBar.style.width = `${progressPercent}%`;
+            progressPercentage.textContent = `${Math.round(progressPercent)}%`;
+
+            // Display weekly development info
+            const currentWeekNumber = currentWeeks + 1;
+            const info = weeklyDevelopmentInfo[currentWeekNumber];
+
+            if (info) {
+                weeklyInfoContainer.style.display = 'block';
+                weeklyInfoWeekNumber.textContent = `${currentWeekNumber}. SSW`;
+                weeklyInfoText.textContent = info.description;
+
+                let statsHtml = '';
+                if (info.size) {
+                    statsHtml += `<div><span class="block text-sm font-semibold" style="color: #fb923c;">Größe</span><span class="text-lg">${info.size}</span></div>`;
+                }
+                if (info.weight) {
+                    statsHtml += `<div><span class="block text-sm font-semibold" style="color: #fb923c;">Gewicht</span><span class="text-lg">${info.weight}</span></div>`;
+                }
+
+                if (statsHtml) {
+                    weeklyStats.innerHTML = statsHtml;
+                    weeklyStats.style.display = 'flex';
+                } else {
+                    weeklyStats.style.display = 'none';
+                }
+            } else if (currentWeeks >= 40) {
+                weeklyInfoContainer.style.display = 'block';
+                weeklyInfoWeekNumber.textContent = `> 40. SSW`;
+                weeklyInfoText.textContent = "Der errechnete Termin ist überschritten. Das ist nicht ungewöhnlich. Bleiben Sie in engem Kontakt mit Ihrem Arzt oder Ihrer Hebamme.";
+                weeklyStats.style.display = 'none';
+            } else {
+                weeklyInfoContainer.style.display = 'none'; // Hide if no info available (e.g., before pregnancy)
+            }
+
             // Render Calendar
             calendarDiv.innerHTML = ''; // Clear previous calendar
             const totalWeeksToDisplay = 41; // Display up to week 40, plus one for buffer/due date visualization
@@ -214,6 +452,7 @@
             for (let i = 0; i < totalWeeksToDisplay; i++) {
                 const weekNumber = i + 1;
                 const weekCell = document.createElement('div');
+                weekCell.dataset.week = weekNumber;
                 weekCell.classList.add('week-cell');
 
                 // Add trimester class
@@ -240,7 +479,65 @@
 
         // Render the app on page load
         document.addEventListener('DOMContentLoaded', renderApp);
+
+        // Event listener for calendar week clicks
+        calendarDiv.addEventListener('click', (event) => {
+            const weekCell = event.target.closest('.week-cell');
+            if (!weekCell) return;
+
+            // Remove 'selected-week' from previously selected cell
+            const currentlySelected = document.querySelector('.selected-week');
+            if (currentlySelected) {
+                currentlySelected.classList.remove('selected-week');
+            }
+
+            // Add 'selected-week' to the clicked cell
+            weekCell.classList.add('selected-week');
+
+            const weekNumber = parseInt(weekCell.dataset.week, 10);
+            const { startDate, endDate } = getWeekDateRange(weekNumber, fixedLmpDate);
+
+            const options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
+            const formattedStartDate = startDate.toLocaleDateString('de-DE', options);
+            const formattedEndDate = endDate.toLocaleDateString('de-DE', options);
+
+            weekInfoDisplay.innerHTML = `<span class="font-bold">Woche ${weekNumber}:</span><span>${formattedStartDate} - ${formattedEndDate}</span>`;
+        });
+
+        // Event listener for the date search input
+        dateSearchInput.addEventListener('change', (event) => {
+            const selectedDateValue = event.target.value;
+            if (!selectedDateValue) {
+                dateSearchResult.innerHTML = '<p>Wähle ein Datum, um die entsprechende SSW zu sehen.</p>';
+                return;
+            }
+
+            // The input value is 'YYYY-MM-DD'. To avoid timezone issues where this might be interpreted as UTC midnight,
+            // we construct the date from parts, which the Date constructor treats as local time.
+            const parts = selectedDateValue.split('-');
+            const selectedDate = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+            selectedDate.setHours(0, 0, 0, 0); // Normalize to the start of the day
+
+            if (isNaN(selectedDate.getTime())) { // Check for invalid date
+                dateSearchResult.innerHTML = '<p>Ungültiges Datum. Bitte versuche es erneut.</p>';
+                return;
+            }
+
+            const { weeks, days } = calculateSsw(fixedLmpDate, selectedDate);
+
+            const formattedSelectedDate = selectedDate.toLocaleDateString('de-DE', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            if (weeks < 0) {
+                dateSearchResult.innerHTML = `<p>Das Datum ${formattedSelectedDate} liegt vor dem Beginn der Schwangerschaft.</p>`;
+            } else if (weeks >= 41) {
+                dateSearchResult.innerHTML = `<p>Das Datum ${formattedSelectedDate} liegt nach der 41. Woche.</p>`;
+            } else {
+                // Use weeks + 1 for human-readable week number (e.g., 0 weeks passed = 1st week)
+                dateSearchResult.innerHTML = `<p>Der ${formattedSelectedDate} ist in der <strong>${weeks + 1}. SSW</strong> (genau: ${weeks}+${days}).</p>`;
+            }
+        });
     </script>
 </body>
 </html>
-
