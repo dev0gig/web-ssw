@@ -70,64 +70,85 @@
         #progressBar {
             transition: width 0.5s ease-in-out;
         }
+        /* Simple modal animation */
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-300">
-    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <h1 class="text-3xl sm:text-4xl font-bold text-center text-violet-400">Schwangerschafts-Tracker</h1>
 
-        <!-- Main Info Card -->
-        <div id="infoDisplay" class="glass-effect border-l-4 border-sky-500 p-4 sm:p-6 rounded-xl space-y-2">
-            <p><span class="font-medium text-slate-400">Erster Tag der letzten Regel:</span> <span id="lmpDisplay" class="font-bold text-slate-100"></span></p>
-            <p><span class="font-medium text-slate-400">Aktuelle Schwangerschaftswoche:</span> <span id="currentSsw" class="font-bold text-slate-100"></span></p>
-            <p><span class="font-medium text-slate-400">Errechneter Entbindungstermin:</span> <span id="dueDate" class="font-bold text-slate-100"></span></p>
-            <p class="mt-3 pt-3 border-t border-sky-500/20"><span class="font-medium text-slate-400">Noch:</span> <span id="countdown" class="font-bold text-slate-100"></span></p>
-        </div>
+        <div class="mt-8 lg:grid lg:grid-cols-5 lg:gap-8">
+            <!-- Left Column: Info & Tools -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Main Info Card -->
+                <div id="infoDisplay" class="glass-effect border-l-4 border-sky-500 p-4 sm:p-6 rounded-xl space-y-2">
+                    <p><span class="font-medium text-slate-400">Erster Tag der letzten Regel:</span> <span id="lmpDisplay" class="font-bold text-slate-100"></span></p>
+                    <p><span class="font-medium text-slate-400">Aktuelle Schwangerschaftswoche:</span> <span id="currentSsw" class="font-bold text-slate-100"></span></p>
+                    <p><span class="font-medium text-slate-400">Errechneter Entbindungstermin:</span> <span id="dueDate" class="font-bold text-slate-100"></span></p>
+                    <p class="mt-3 pt-3 border-t border-sky-500/20"><span class="font-medium text-slate-400">Noch:</span> <span id="countdown" class="font-bold text-slate-100"></span></p>
+                </div>
 
-        <!-- Progress Bar -->
-        <div>
-            <div class="flex justify-between items-center mb-1 text-sm">
-                <span class="font-semibold text-slate-400">Fortschritt</span>
-                <span id="progressPercentage" class="font-bold text-violet-400">0%</span>
+                <!-- Progress Bar -->
+                <div>
+                    <div class="flex justify-between items-center mb-1 text-sm">
+                        <span class="font-semibold text-slate-400">Fortschritt</span>
+                        <span id="progressPercentage" class="font-bold text-violet-400">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-700/50 rounded-full h-3 overflow-hidden">
+                        <div id="progressBar" class="bg-violet-500 h-3 rounded-full"></div>
+                    </div>
+                    <div class="flex justify-between text-xs mt-1 text-slate-500">
+                        <span>Woche 1</span>
+                        <span>Woche 40</span>
+                    </div>
+                </div>
+
+                <!-- Date Converter Card -->
+                <div class="glass-effect p-4 sm:p-6 rounded-xl">
+                    <h2 class="text-2xl font-semibold text-center mb-4 text-violet-400">Datum in SSW umrechnen</h2>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <label for="date-search-input" class="font-semibold text-slate-400">Wähle ein Datum:</label>
+                        <input type="date" id="date-search-input" class="date-input border border-slate-600 rounded-md p-2 text-slate-200">
+                    </div>
+                    <div id="date-search-result" class="text-center mt-4 text-slate-400 min-h-[2rem]">
+                        <p>Wähle ein Datum, um die entsprechende SSW zu sehen.</p>
+                    </div>
+                </div>
             </div>
-            <div class="w-full bg-slate-700/50 rounded-full h-3 overflow-hidden">
-                <div id="progressBar" class="bg-violet-500 h-3 rounded-full"></div>
-            </div>
-            <div class="flex justify-between text-xs mt-1 text-slate-500">
-                <span>Woche 1</span>
-                <span>Woche 40</span>
+
+            <!-- Right Column: Calendar -->
+            <div class="lg:col-span-3 mt-8 lg:mt-0">
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-semibold text-center text-violet-400">Kalender der Schwangerschaft</h2>
+                    <div id="weekInfoDisplay" class="glass-effect text-center p-4 rounded-xl min-h-[3.5rem] flex items-center justify-center">
+                        <p class="text-slate-400">Klicke auf eine Woche, um die genauen Daten anzuzeigen.</p>
+                    </div>
+                    <div id="calendar" class="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-10 gap-2">
+                        <!-- Calendar weeks will be dynamically inserted here -->
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Weekly Info Card -->
-        <div id="weeklyInfoContainer" class="glass-effect border-l-4 border-amber-500 p-4 sm:p-6 rounded-xl" style="display: none;">
-            <h3 class="text-xl font-semibold mb-3 text-amber-400">Was passiert in dieser Woche? (<span id="weeklyInfoWeekNumber"></span>)</h3>
-            <p id="weeklyInfoText" class="text-base leading-relaxed text-slate-300">Informationen zur aktuellen Woche werden hier geladen...</p>
+    <!-- Weekly Info Modal (position fixed, can be outside the main layout grid) -->
+    <div id="weeklyInfoModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
+        <div class="glass-effect border-l-4 border-amber-500 p-4 sm:p-6 rounded-xl max-w-2xl w-full relative" style="animation: fade-in-up 0.3s ease-out forwards;">
+            <button id="closeModalBtn" class="absolute top-2 right-3 text-slate-400 hover:text-white text-3xl font-light leading-none">&times;</button>
+            <h3 class="text-xl font-semibold mb-3 text-amber-400">Was passiert in der <span id="weeklyInfoWeekNumber"></span>. SSW?</h3>
+            <p id="weeklyInfoText" class="text-base leading-relaxed text-slate-300 max-h-[60vh] overflow-y-auto pr-2">Informationen zur aktuellen Woche werden hier geladen...</p>
             <div id="weeklyStats" style="display: none;" class="mt-4 pt-4 border-t border-amber-500/20 flex flex-col sm:flex-row sm:justify-around text-center gap-4">
                 <!-- Populated by JS -->
-            </div>
-        </div>
-
-        <!-- Date Converter Card -->
-        <div class="glass-effect p-4 sm:p-6 rounded-xl">
-            <h2 class="text-2xl font-semibold text-center mb-4 text-violet-400">Datum in SSW umrechnen</h2>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <label for="date-search-input" class="font-semibold text-slate-400">Wähle ein Datum:</label>
-                <input type="date" id="date-search-input" class="date-input border border-slate-600 rounded-md p-2 text-slate-200">
-            </div>
-            <div id="date-search-result" class="text-center mt-4 text-slate-400 min-h-[2rem]">
-                <p>Wähle ein Datum, um die entsprechende SSW zu sehen.</p>
-            </div>
-        </div>
-
-        <!-- Calendar Section -->
-        <div class="space-y-4">
-            <h2 class="text-2xl font-semibold text-center text-violet-400">Kalender der Schwangerschaft</h2>
-            <div id="weekInfoDisplay" class="glass-effect text-center p-4 rounded-xl min-h-[3.5rem] flex items-center justify-center">
-                <p class="text-slate-400">Klicke auf eine Woche, um die genauen Daten anzuzeigen.</p>
-            </div>
-            <div id="calendar" class="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-10 gap-2">
-                <!-- Calendar weeks will be dynamically inserted here -->
             </div>
         </div>
     </div>
@@ -141,7 +162,8 @@
         const weekInfoDisplay = document.getElementById('weekInfoDisplay');
         const dateSearchInput = document.getElementById('date-search-input');
         const dateSearchResult = document.getElementById('date-search-result');
-        const weeklyInfoContainer = document.getElementById('weeklyInfoContainer');
+        const weeklyInfoModal = document.getElementById('weeklyInfoModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
         const weeklyInfoWeekNumber = document.getElementById('weeklyInfoWeekNumber');
         const weeklyInfoText = document.getElementById('weeklyInfoText');
         const weeklyStats = document.getElementById('weeklyStats');
@@ -304,38 +326,6 @@
             progressBar.style.width = `${progressPercent}%`;
             progressPercentage.textContent = `${Math.round(progressPercent)}%`;
 
-            // Display weekly development info
-            const currentWeekNumber = currentWeeks + 1;
-            const info = weeklyDevelopmentInfo[currentWeekNumber];
-
-            if (info) {
-                weeklyInfoContainer.style.display = 'block';
-                weeklyInfoWeekNumber.textContent = `${currentWeekNumber}. SSW`;
-                weeklyInfoText.textContent = info.description;
-
-                let statsHtml = '';
-                if (info.size) {
-                    statsHtml += `<div><span class="block text-sm font-medium text-amber-500">Größe</span><span class="text-lg font-semibold text-amber-300">${info.size}</span></div>`;
-                }
-                if (info.weight) {
-                    statsHtml += `<div><span class="block text-sm font-medium text-amber-500">Gewicht</span><span class="text-lg font-semibold text-amber-300">${info.weight}</span></div>`;
-                }
-
-                if (statsHtml) {
-                    weeklyStats.innerHTML = statsHtml;
-                    weeklyStats.style.display = 'flex';
-                } else {
-                    weeklyStats.style.display = 'none';
-                }
-            } else if (currentWeeks >= 40) {
-                weeklyInfoContainer.style.display = 'block';
-                weeklyInfoWeekNumber.textContent = `> 40. SSW`;
-                weeklyInfoText.textContent = "Der errechnete Termin ist überschritten. Das ist nicht ungewöhnlich. Bleiben Sie in engem Kontakt mit Ihrem Arzt oder Ihrer Hebamme.";
-                weeklyStats.style.display = 'none';
-            } else {
-                weeklyInfoContainer.style.display = 'none'; // Hide if no info available (e.g., before pregnancy)
-            }
-
             // Render Calendar
             calendarDiv.innerHTML = ''; // Clear previous calendar
             const totalWeeksToDisplay = 41; // Display up to week 40, plus one for buffer/due date visualization
@@ -371,6 +361,50 @@
         // Render the app on page load
         document.addEventListener('DOMContentLoaded', renderApp);
 
+        // --- Modal Logic ---
+        function openModal(weekNumber) {
+            const info = weeklyDevelopmentInfo[weekNumber];
+
+            if (info) {
+                weeklyInfoWeekNumber.textContent = weekNumber;
+                weeklyInfoText.textContent = info.description;
+
+                let statsHtml = '';
+                if (info.size) {
+                    statsHtml += `<div><span class="block text-sm font-medium text-amber-500">Größe</span><span class="text-lg font-semibold text-amber-300">${info.size}</span></div>`;
+                }
+                if (info.weight) {
+                    statsHtml += `<div><span class="block text-sm font-medium text-amber-500">Gewicht</span><span class="text-lg font-semibold text-amber-300">${info.weight}</span></div>`;
+                }
+
+                if (statsHtml) {
+                    weeklyStats.innerHTML = statsHtml;
+                    weeklyStats.style.display = 'flex';
+                } else {
+                    weeklyStats.style.display = 'none';
+                }
+            } else {
+                // Handle cases for weeks without specific data (e.g., week 41)
+                weeklyInfoWeekNumber.textContent = weekNumber;
+                weeklyInfoText.textContent = "Für diese Woche liegen keine spezifischen Informationen vor. Der errechnete Termin ist möglicherweise überschritten.";
+                weeklyStats.style.display = 'none';
+            }
+
+            weeklyInfoModal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            weeklyInfoModal.classList.add('hidden');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        weeklyInfoModal.addEventListener('click', (event) => {
+            if (event.target === weeklyInfoModal) closeModal(); // Close if clicking on the overlay
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !weeklyInfoModal.classList.contains('hidden')) closeModal();
+        });
+
         // Event listener for calendar week clicks
         calendarDiv.addEventListener('click', (event) => {
             const weekCell = event.target.closest('.week-cell');
@@ -386,6 +420,9 @@
             weekCell.classList.add('selected-week');
 
             const weekNumber = parseInt(weekCell.dataset.week, 10);
+            
+            openModal(weekNumber); // Open the modal with info for the clicked week
+
             const { startDate, endDate } = getWeekDateRange(weekNumber, fixedLmpDate);
 
             const options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
